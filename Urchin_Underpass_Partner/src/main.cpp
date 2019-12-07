@@ -18,7 +18,7 @@ vex::motor RightIntake(vex::PORT17, vex::gearSetting::ratio18_1, true);
 vex::motor LeftScissor(vex::PORT15, vex::gearSetting::ratio36_1, false);
 vex::motor RightScissor(vex::PORT13, vex::gearSetting::ratio36_1, true);
 vex::controller Controller1(vex::controllerType::primary);
-controller Controller2(controllerType::partner);
+vex::controller Controller2(vex::controllerType::partner);
 
 void drivetrainBrake(){
   LeftDrive.stop(vex::brakeType::brake);
