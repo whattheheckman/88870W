@@ -3,7 +3,7 @@
 /*    Module:       main.cpp                                                  */
 /*    Author:       Nathan Brown                                              */
 /*    Created:      Tue Nov 25 2019                                           */
-/*    Description:  Jordan's Jank Jo-Bot                                      */
+/*    Description:  Big Mac                                                   */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 #include "vex.h"
@@ -13,11 +13,10 @@ vex::competition Competition;
 vex::motor LeftDrive(vex::PORT11, vex::gearSetting::ratio18_1, false);
 vex::motor RightDrive(vex::PORT20, vex::gearSetting::ratio18_1, true);
 vex::motor IntakeRotate(vex::PORT14, vex::gearSetting::ratio18_1, false);
-vex::motor LeftIntake(vex::PORT16, vex::gearSetting::ratio18_1, false);
-vex::motor RightIntake(vex::PORT17, vex::gearSetting::ratio18_1, true);
+vex::motor LeftArm(vex::PORT16, vex::gearSetting::ratio18_1, false);
+vex::motor RightArm(vex::PORT17, vex::gearSetting::ratio18_1, true);
 vex::motor LeftScissor(vex::PORT15, vex::gearSetting::ratio36_1, false);
 vex::motor RightScissor(vex::PORT13, vex::gearSetting::ratio36_1, true);
-vex::motor RampSlide(vex::PORT18, vex::gearSetting::ratio36_1, false);
 vex::controller Controller1(vex::controllerType::primary);
 
 void drivetrainBrake(){
@@ -32,13 +31,14 @@ int dpadSpeedPCT = 100;
 int intakeSpeedPCT = 100;
 int rotateSpeedPCT = 35;
 int clampPCT = 35;
+int rampSpeedPCT = 90;
 float joyspeedMod = 0.9;
 
 void pre_auton( void ) {
 
 }
 
-void autonomous( void ) {\
+void autonomous( void ) {
   LeftDrive.spin(vex::directionType::fwd, 75, vex::velocityUnits::pct); 
   RightDrive.spin(vex::directionType::fwd, 75, vex::velocityUnits::pct);
   vex::this_thread::sleep_for(3000);
@@ -61,30 +61,28 @@ void usercontrol( void ) {
         else if(Controller1.ButtonDown.pressing()) {
           LeftDrive.spin(vex::directionType::rev,dpadSpeedPCT,vex::velocityUnits::pct);
           RightDrive.spin(vex::directionType::rev,dpadSpeedPCT,vex::velocityUnits::pct);            
-        }
-        
-                
+        }       
         //INTAKE CONTROL
         if(Controller1.ButtonR1.pressing()) {
-          LeftIntake.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
-          RightIntake.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
+          LeftArm.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
+          RightArm.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
         }
         else if(Controller1.ButtonR2.pressing()) { 
-          LeftIntake.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
-          RightIntake.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
+          LeftArm.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
+          RightArm.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
         }
         else {
-          LeftIntake.stop(vex::brakeType::hold);
-          RightIntake.stop(vex::brakeType::hold);
+          LeftArm.stop(vex::brakeType::hold);
+          RightArm.stop(vex::brakeType::hold);
         }
 
         //SCISSOR CONTROL
-        if(Controller1.ButtonL1.pressing()) {
+        if(Controller1.ButtonB.pressing()) {
           LeftScissor.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
           RightScissor.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
 
         }
-        else if(Controller1.ButtonL2.pressing()) { 
+        else if(Controller1.ButtonX.pressing()) { 
           LeftScissor.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
           RightScissor.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
 
@@ -96,19 +94,17 @@ void usercontrol( void ) {
           LeftScissor.stop(vex::brakeType::hold);
           RightScissor.stop(vex::brakeType::hold);
         }
-        
+
         //Intake Rotato
-        if(Controller1.ButtonX.pressing()) { 
+        if(Controller1.ButtonY.pressing()) { 
           IntakeRotate.spin(vex::directionType::fwd, rotateSpeedPCT, vex::velocityUnits::pct);
         }
-        else if(Controller1.ButtonB .pressing()) { 
+        else if(Controller1.ButtonA.pressing()) { 
           IntakeRotate.spin(vex::directionType::rev, rotateSpeedPCT, vex::velocityUnits::pct);
         }
         else { 
           IntakeRotate.stop(vex::brakeType::hold);        
         }
-
- 
     task::sleep(20); //Sleep the task for a short amount of time to prevent wasted resources. 
   }
 }

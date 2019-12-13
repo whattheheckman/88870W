@@ -9,15 +9,14 @@
 #include "myfunctions.h"
 #include "vex.h"
 using namespace vex;
-typedef std::string string;
 
 brain Brain;
 competition Competition;
 motor LeftDrive(PORT11, gearSetting::ratio18_1, false);
 motor RightDrive(PORT20, gearSetting::ratio18_1, true);
 motor IntakeRotate(PORT14, gearSetting::ratio18_1, false);
-motor LeftIntake(PORT16, gearSetting::ratio18_1, false);
-motor RightIntake(PORT17, gearSetting::ratio18_1, true);
+motor LeftArm(PORT16, gearSetting::ratio18_1, false);
+motor RightArm(PORT17, gearSetting::ratio18_1, true);
 motor LeftScissor(PORT15, gearSetting::ratio36_1, false);
 motor RightScissor(PORT13, gearSetting::ratio36_1, true);
 controller Controller1(controllerType::primary);
@@ -32,36 +31,31 @@ int rampDelayTime = 5;
 float joyspeedMod = 0.9;
 float slowmodeMod = 0.4;
 bool slowmode = false;
-string slowmodeState = "OFF";
 
 void drivetrainBrake() {
   LeftDrive.stop(vex::brakeType::brake);
   RightDrive.stop(vex::brakeType::brake);
 }
 
-void slowmodeSwitch() { slowmode = !slowmode; }
-
-void slowmodeToggle() {
-  if (slowmode == true) {
-    slowmodeState = "ON";
-    Brain.Screen.clearScreen();
-    Brain.Screen.setCursor(1, 1);
-    Brain.Screen.print("Slowmode  %s", slowmodeState.c_str()); //
-    Controller1.rumble(".");
-    Controller1.Screen.clearLine(5);
-    Controller1.Screen.setCursor(5, 1);
-    Controller1.Screen.print("Slowmode  %s", slowmodeState.c_str());
-  }
-  if (slowmode == false) {
-    slowmodeState = "off";
-    Brain.Screen.clearScreen();
-    Brain.Screen.setCursor(1, 1);
-    Brain.Screen.print("Slowmode  %s", slowmodeState.c_str()); // "Slowmode  %s", "Slowmode  %s", slowmodeState.c_str()
-    Controller1.rumble(".");
-    Controller1.Screen.clearLine(5);
-    Controller1.Screen.setCursor(5, 1);
-    Controller1.Screen.print("Slowmode  %s", slowmodeState.c_str());
-  }
+void slowmodeOn() {
+  slowmode = true;
+  Brain.Screen.clearScreen();
+  Brain.Screen.setCursor(1, 1);
+  Controller1.Screen.setCursor(3, 6);
+  Brain.Screen.print("Slowmode  ON");
+  Controller1.rumble("-");
+  Controller1.Screen.clearLine(6);
+  Controller1.Screen.print("Slowmode  ON");
+}
+void slowmodeOff() {
+  slowmode = false;
+  Brain.Screen.clearScreen();
+  Brain.Screen.setCursor(1, 1);
+  Controller1.Screen.setCursor(3, 6);
+  Brain.Screen.print("Slowmode  off");
+  Controller1.rumble("..");
+  Controller1.Screen.clearLine(6);
+  Controller1.Screen.print("Slowmode  off");
 }
 
 void autonomous(void) {
@@ -69,21 +63,20 @@ void autonomous(void) {
   RightDrive.spin(vex::directionType::fwd, 75, vex::velocityUnits::pct);
   vex::this_thread::sleep_for(3000);
   LeftDrive.spin(vex::directionType::rev, 75, vex::velocityUnits::pct);
-  RightDrive.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+  RightDrive.spin(vex::directionType::rev, 75, vex::velocityUnits::pct);
   vex::this_thread::sleep_for(2000);
 }
 
 // Driver Code
 void usercontrol(void) {
   while (1) {
-    Controller1.ButtonA.pressed(slowmodeSwitch);
-    Controller1.ButtonA.pressed(slowmodeToggle);
+    Controller1.ButtonLeft.pressed(slowmodeOff);
+    Controller1.ButtonRight.pressed(slowmodeOn);
   }
   while (slowmode == false) {
-    LeftDrive.spin(
-        fwd,
-        rampUp(Controller1.Axis3.value(), 5),
-        vex::velocityUnits::pct); //(Axis3+Axis1)/2
+    LeftDrive.spin(vex::directionType::fwd,
+                   ((Controller1.Axis3.value() - Controller1.Axis1.value()) * joyspeedMod),
+                   vex::velocityUnits::pct); //(Axis3+Axis1)/2
     RightDrive.spin(
         vex::directionType::fwd,
         ((Controller1.Axis3.value() - Controller1.Axis1.value()) * joyspeedMod),
@@ -107,18 +100,18 @@ void usercontrol(void) {
 
     // INTAKE CONTROL
     if (Controller1.ButtonR1.pressing()) {
-      LeftIntake.spin(vex::directionType::fwd, liftSpeedPCT,
+      LeftArm.spin(vex::directionType::fwd, liftSpeedPCT,
                       vex::velocityUnits::pct);
-      RightIntake.spin(vex::directionType::fwd, liftSpeedPCT,
+      RightArm.spin(vex::directionType::fwd, liftSpeedPCT,
                        vex::velocityUnits::pct);
     } else if (Controller1.ButtonR2.pressing()) {
-      LeftIntake.spin(vex::directionType::rev, liftSpeedPCT,
+      LeftArm.spin(vex::directionType::rev, liftSpeedPCT,
                       vex::velocityUnits::pct);
-      RightIntake.spin(vex::directionType::rev, liftSpeedPCT,
+      RightArm.spin(vex::directionType::rev, liftSpeedPCT,
                        vex::velocityUnits::pct);
     } else {
-      LeftIntake.stop(vex::brakeType::hold);
-      RightIntake.stop(vex::brakeType::hold);
+      LeftArm.stop(vex::brakeType::hold);
+      RightArm.stop(vex::brakeType::hold);
     }
 
     // SCISSOR CONTROL
@@ -184,18 +177,18 @@ void usercontrol(void) {
 
     // INTAKE CONTROL
     if (Controller1.ButtonR1.pressing()) {
-      LeftIntake.spin(vex::directionType::fwd, liftSpeedPCT,
+      LeftArm.spin(vex::directionType::fwd, liftSpeedPCT,
                       vex::velocityUnits::pct);
-      RightIntake.spin(vex::directionType::fwd, liftSpeedPCT,
+      RightArm.spin(vex::directionType::fwd, liftSpeedPCT,
                        vex::velocityUnits::pct);
     } else if (Controller1.ButtonR2.pressing()) {
-      LeftIntake.spin(vex::directionType::rev, liftSpeedPCT,
+      LeftArm.spin(vex::directionType::rev, liftSpeedPCT,
                       vex::velocityUnits::pct);
-      RightIntake.spin(vex::directionType::rev, liftSpeedPCT,
+      RightArm.spin(vex::directionType::rev, liftSpeedPCT,
                        vex::velocityUnits::pct);
     } else {
-      LeftIntake.stop(vex::brakeType::hold);
-      RightIntake.stop(vex::brakeType::hold);
+      LeftArm.stop(vex::brakeType::hold);
+      RightArm.stop(vex::brakeType::hold);
     }
 
     // SCISSOR CONTROL

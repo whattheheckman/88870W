@@ -13,8 +13,8 @@ vex::competition Competition;
 vex::motor LeftDrive(vex::PORT11, vex::gearSetting::ratio18_1, false);
 vex::motor RightDrive(vex::PORT20, vex::gearSetting::ratio18_1, true);
 vex::motor IntakeRotate(vex::PORT14, vex::gearSetting::ratio18_1, false);
-vex::motor LeftIntake(vex::PORT16, vex::gearSetting::ratio18_1, false);
-vex::motor RightIntake(vex::PORT17, vex::gearSetting::ratio18_1, true);
+vex::motor LeftArm(vex::PORT16, vex::gearSetting::ratio18_1, false);
+vex::motor RightArm(vex::PORT17, vex::gearSetting::ratio18_1, true);
 vex::motor LeftScissor(vex::PORT15, vex::gearSetting::ratio36_1, false);
 vex::motor RightScissor(vex::PORT13, vex::gearSetting::ratio36_1, true);
 vex::controller Controller1(vex::controllerType::primary);
@@ -76,18 +76,18 @@ void usercontrol( void ) {
         }
         
                 
-        //INTAKE CONTROL
-        if(Controller2.ButtonR1.pressing()) {
-          LeftIntake.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
-          RightIntake.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
+        //ARM CONTROL
+        if(Controller1.ButtonR1.pressing()) {
+          LeftArm.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
+          RightArm.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
         }
-        else if(Controller2.ButtonR2.pressing()) { 
-          LeftIntake.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
-          RightIntake.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
+        else if(Controller1.ButtonR2.pressing()) { 
+          LeftArm.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
+          RightArm.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
         }
         else {
-          LeftIntake.stop(vex::brakeType::hold);
-          RightIntake.stop(vex::brakeType::hold);
+          LeftArm.stop(vex::brakeType::hold);
+          RightArm.stop(vex::brakeType::hold);
         }
 
         //SCISSOR CONTROL
