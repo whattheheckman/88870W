@@ -10,6 +10,7 @@
 #include "vex.h"
 using namespace vex;
 
+vex::brain Brain;
 vex::competition Competition;
 vex::motor LeftDrive(vex::PORT11, vex::gearSetting::ratio18_1, false);
 vex::motor RightDrive(vex::PORT20, vex::gearSetting::ratio18_1, true);
@@ -39,11 +40,6 @@ int rampDelayTime = 5;
 float joyspeedMod = 0.9;
 float slowmodeMod = 0.4;
 bool slowmode = false;
-
-void drivetrainBrake() {
-  LeftDrive.stop(vex::brakeType::brake);
-  RightDrive.stop(vex::brakeType::brake);
-}
 
 void slowmodeOn() {
   slowmode = true;

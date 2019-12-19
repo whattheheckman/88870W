@@ -86,12 +86,12 @@ void usercontrol( void ) {
         }
 
         //SCISSOR CONTROL
-        if(Controller1.ButtonR1.pressing()) {
+        if(Controller1.ButtonR2.pressing()) {
           LeftScissor.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
           RightScissor.spin(vex::directionType::fwd, liftSpeedPCT, vex::velocityUnits::pct);
 
         }
-        else if(Controller1.ButtonR2.pressing()) { 
+        else if(Controller1.ButtonR1.pressing()) { 
           LeftScissor.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
           RightScissor.spin(vex::directionType::rev, liftSpeedPCT, vex::velocityUnits::pct);
         }
