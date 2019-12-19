@@ -9,7 +9,6 @@ brain  Brain;
 
 // VEXcode device constructors
 
-
 // VEXcode generated functions
 
 
