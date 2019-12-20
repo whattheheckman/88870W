@@ -69,14 +69,24 @@ void usercontrol(void) {
                      vex::velocityUnits::pct);
       RightDrive.spin(vex::directionType::rev, dpadSpeedPCT,
                       vex::velocityUnits::pct);
+    } else if (Controller1.ButtonLeft.pressing()) {
+      LeftDrive.spin(vex::directionType::rev, dpadSpeedPCT,
+                     vex::velocityUnits::pct);
+      RightDrive.spin(vex::directionType::fwd, dpadSpeedPCT,
+                     vex::velocityUnits::pct);
+    } else if (Controller1.ButtonRight.pressing()) {
+      LeftDrive.spin(vex::directionType::fwd, dpadSpeedPCT,
+                     vex::velocityUnits::pct);
+      RightDrive.spin(vex::directionType::rev, dpadSpeedPCT,
+                     vex::velocityUnits::pct);
     }
     // ARM CONTROL
-    if (Controller1.ButtonR1.pressing()) {
+    if (Controller1.ButtonX.pressing()) {
       LeftArm.spin(vex::directionType::fwd, liftSpeedPCT,
                    vex::velocityUnits::pct);
       RightArm.spin(vex::directionType::fwd, liftSpeedPCT,
                     vex::velocityUnits::pct);
-    } else if (Controller1.ButtonR2.pressing()) {
+    } else if (Controller1.ButtonB.pressing()) {
       LeftArm.spin(vex::directionType::rev, liftSpeedPCT,
                    vex::velocityUnits::pct);
       RightArm.spin(vex::directionType::rev, liftSpeedPCT,
@@ -86,22 +96,22 @@ void usercontrol(void) {
       RightArm.stop(vex::brakeType::hold);
     }
     // CLAMP
-    if (Controller1.ButtonL1.pressing()) {
+    if (Controller1.ButtonA.pressing()) {
       Clamp.spin(vex::directionType::fwd, clampPCT, vex::velocityUnits::pct);
-    } else if (Controller1.ButtonL2.pressing()) {
+    } else if (Controller1.ButtonY.pressing()) {
       Clamp.spin(vex::directionType::rev, clampPCT, vex::velocityUnits::pct);
     } else {
       Clamp.stop(vex::brakeType::hold);
     }
 
     // SCISSOR CONTROL
-    if (Controller1.ButtonB.pressing()) {
+    if (Controller1.ButtonR1.pressing()) {
       LeftScissor.spin(vex::directionType::fwd, liftSpeedPCT,
                        vex::velocityUnits::pct);
       RightScissor.spin(vex::directionType::fwd, liftSpeedPCT,
                         vex::velocityUnits::pct);
 
-    } else if (Controller1.ButtonX.pressing()) {
+    } else if (Controller1.ButtonR2.pressing()) {
       LeftScissor.spin(vex::directionType::rev, liftSpeedPCT,
                        vex::velocityUnits::pct);
       RightScissor.spin(vex::directionType::rev, liftSpeedPCT,
@@ -113,10 +123,10 @@ void usercontrol(void) {
     }
 
     // TRAY CONTROL
-    if (Controller1.ButtonY.pressing()) {
+    if (Controller1.ButtonL1.pressing()) {
       TrayRotate.spin(vex::directionType::fwd, rotateSpeedPCT,
                       vex::velocityUnits::pct);
-    } else if (Controller1.ButtonA.pressing()) {
+    } else if (Controller1.ButtonL2.pressing()) {
       TrayRotate.spin(vex::directionType::rev, rotateSpeedPCT,
                       vex::velocityUnits::pct);
     } else {
