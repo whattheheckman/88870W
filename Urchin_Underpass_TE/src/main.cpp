@@ -38,11 +38,11 @@ float joyspeedMod = 0.9;
 void pre_auton(void) {}
 
 void autonomous(void) {
-  LeftDrive.spin(vex::directionType::fwd, 75, vex::velocityUnits::pct);
-  RightDrive.spin(vex::directionType::fwd, 75, vex::velocityUnits::pct);
+  LeftDrive.spin(vex::directionType::rev, 60, vex::velocityUnits::pct);
+  RightDrive.spin(vex::directionType::rev, 60, vex::velocityUnits::pct);
   vex::this_thread::sleep_for(3000);
-  LeftDrive.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
-  RightDrive.spin(vex::directionType::rev, 100, vex::velocityUnits::pct);
+  LeftDrive.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
+  RightDrive.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
   vex::this_thread::sleep_for(2000);
 }
 
@@ -73,12 +73,12 @@ void usercontrol(void) {
       LeftDrive.spin(vex::directionType::rev, dpadSpeedPCT,
                      vex::velocityUnits::pct);
       RightDrive.spin(vex::directionType::fwd, dpadSpeedPCT,
-                     vex::velocityUnits::pct);
+                      vex::velocityUnits::pct);
     } else if (Controller1.ButtonRight.pressing()) {
       LeftDrive.spin(vex::directionType::fwd, dpadSpeedPCT,
                      vex::velocityUnits::pct);
       RightDrive.spin(vex::directionType::rev, dpadSpeedPCT,
-                     vex::velocityUnits::pct);
+                      vex::velocityUnits::pct);
     }
     // ARM CONTROL
     if (Controller1.ButtonX.pressing()) {
@@ -105,13 +105,13 @@ void usercontrol(void) {
     }
 
     // SCISSOR CONTROL
-    if (Controller1.ButtonR1.pressing()) {
+    if (Controller1.ButtonR2.pressing()) {
       LeftScissor.spin(vex::directionType::fwd, liftSpeedPCT,
                        vex::velocityUnits::pct);
       RightScissor.spin(vex::directionType::fwd, liftSpeedPCT,
                         vex::velocityUnits::pct);
 
-    } else if (Controller1.ButtonR2.pressing()) {
+    } else if (Controller1.ButtonR1.pressing()) {
       LeftScissor.spin(vex::directionType::rev, liftSpeedPCT,
                        vex::velocityUnits::pct);
       RightScissor.spin(vex::directionType::rev, liftSpeedPCT,
@@ -147,7 +147,16 @@ int main() {
 
   // Run the pre-autonomous function.
   pre_auton();
-
+  Brain.Screen.drawCircle(1, 1, 10);
+  Brain.Screen.setFont(monoL); 
+  Brain.Screen.setCursor(1, 1);
+  Brain.Screen.print("2 + 2 is 4");
+  Brain.Screen.setCursor(2, 1);
+  Brain.Screen.print("minus 1, that's 3");
+  Brain.Screen.setCursor(3, 1);
+  Brain.Screen.setFont(monoXL);
+  Brain.Screen.setCursor(4, 1);
+  Brain.Screen.print("QUICK MAFHS");
   // Prevent main from exiting with an infinite loop.
   while (1) {
     task::sleep(100); // Sleep the task for a short amount of time to prevent
