@@ -2,6 +2,19 @@
 #include "vex.h"
 using namespace vex;
 
+
+int Rampv2(int controllerPwr, int motorSpeed, int maxChange, int delayTime){
+  int motorRead = 0;
+  int motorOut = 0;
+  while(controllerPwr > 0){
+    motorRead = motorSpeed;
+    motorOut = motorRead += maxChange;
+    task::sleep(delayTime);
+  }
+  return motorOut;
+}
+
+
 // ramp up script
 int rampUp(int controlInput, int maxChange) {
   int motorPercent;
@@ -90,3 +103,4 @@ int deadzoneY(int y, int threshold) {
     return deadY;
   }
 }
+

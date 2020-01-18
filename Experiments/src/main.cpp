@@ -1,3 +1,8 @@
+// ---- START VEXCODE CONFIGURED DEVICES ----
+// Robot Configuration:
+// [Name]               [Type]        [Port(s)]
+// Motor11              motor         11
+// ---- END VEXCODE CONFIGURED DEVICES ----
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
@@ -11,14 +16,6 @@
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
 
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Drivetrain           drivetrain    1, 10
-// ClawMotor            motor         3
-// ArmMotor             motor         8
-// ---- END VEXCODE CONFIGURED DEVICES ----
-
 #include "myfunctions.h"
 #include "vex.h"
 using namespace std;
@@ -30,18 +27,10 @@ int LeftY;
 int main() {
   // Initializing Robot Configuration. DO NOT REMOVE!
   vexcodeInit();
-  while (1) {/*
-    if (Controller1.Axis3.position(percent) > 0) {
-      Brain.Screen.print(
-          nathanRampUp(Controller1.Axis3.position(percent), 10, 10));
-      task::sleep(50);
-      Brain.Screen.newLine();
-    } */
-    if (Controller1.Axis3.position(percent) > 0) {
-      Brain.Screen.print(
-          rampUp(Controller1.Axis3.position(percent), 10));
-      task::sleep(50);
-      Brain.Screen.newLine();
-    }
+  while (1) {
+    Rampv2(Controller1.Axis3.position(percent),
+           Motor11.velocity(velocityUnits::pct), 10, 10);
+    task::sleep(50);
+    Brain.Screen.newLine();
   }
 }

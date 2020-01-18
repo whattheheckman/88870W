@@ -9,6 +9,7 @@
 #include "vex.h"
 using namespace vex;
 
+vex::brain Brain;
 vex::competition Competition;
 vex::motor LeftDrive(vex::PORT11, vex::gearSetting::ratio18_1, false);
 vex::motor RightDrive(vex::PORT20, vex::gearSetting::ratio18_1, true);
@@ -19,31 +20,31 @@ vex::motor LeftScissor(vex::PORT15, vex::gearSetting::ratio36_1, false);
 vex::motor RightScissor(vex::PORT13, vex::gearSetting::ratio36_1, true);
 vex::motor Clamp(vex::PORT12, vex::gearSetting::ratio18_1, false);
 vex::controller Controller1(vex::controllerType::primary);
-vex::drivetrain Drivetrain =
-    drivetrain(LeftDrive, RightDrive, 319.19, 367.5063, 254, mm, 1);
 
 void drivetrainBrake() {
   LeftDrive.stop(vex::brakeType::brake);
   RightDrive.stop(vex::brakeType::brake);
 }
 
-int liftSpeedPCT = 90;
-int dpadSpeedPCT = 100;
-int rotateSpeedPCT = 50;
-int clampPCT = 50;
-int rampSpeedPCT = 90;
-int armSpeedPCT = 50;
-float joyspeedMod = 0.9;
+int liftSpeedPCT = 85;    // scissor lift speed
+int dpadSpeedPCT = 95;    // how fast it is with the dpad
+int rotateSpeedPCT = 45;  // tray rotating speed
+int clampPCT = 65;        // how fast the clamp moves
+int armSpeedPCT = 50;     // how fast the clamp arms move
+float joyspeedMod = 0.95; // joystick modifier
 
-void pre_auton(void) {}
+void pre_auton(void) {
+  TrayRotate.resetRotation();
+  Clamp.resetRotation();
+}
 
 void autonomous(void) {
   LeftDrive.spin(vex::directionType::rev, 60, vex::velocityUnits::pct);
   RightDrive.spin(vex::directionType::rev, 60, vex::velocityUnits::pct);
   vex::this_thread::sleep_for(3000);
-  LeftDrive.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
-  RightDrive.spin(vex::directionType::fwd, 100, vex::velocityUnits::pct);
-  vex::this_thread::sleep_for(2000);
+  LeftDrive.spin(vex::directionType::fwd, 60, vex::velocityUnits::pct);
+  RightDrive.spin(vex::directionType::fwd, 60, vex::velocityUnits::pct);
+  vex::this_thread::sleep_for(1500);
 }
 
 // Driver Code
@@ -82,14 +83,14 @@ void usercontrol(void) {
     }
     // ARM CONTROL
     if (Controller1.ButtonX.pressing()) {
-      LeftArm.spin(vex::directionType::fwd, liftSpeedPCT,
+      LeftArm.spin(vex::directionType::fwd, armSpeedPCT,
                    vex::velocityUnits::pct);
-      RightArm.spin(vex::directionType::fwd, liftSpeedPCT,
+      RightArm.spin(vex::directionType::fwd, armSpeedPCT,
                     vex::velocityUnits::pct);
     } else if (Controller1.ButtonB.pressing()) {
-      LeftArm.spin(vex::directionType::rev, liftSpeedPCT,
+      LeftArm.spin(vex::directionType::rev, armSpeedPCT,
                    vex::velocityUnits::pct);
-      RightArm.spin(vex::directionType::rev, liftSpeedPCT,
+      RightArm.spin(vex::directionType::rev, armSpeedPCT,
                     vex::velocityUnits::pct);
     } else {
       LeftArm.stop(vex::brakeType::hold);
@@ -100,6 +101,8 @@ void usercontrol(void) {
       Clamp.spin(vex::directionType::fwd, clampPCT, vex::velocityUnits::pct);
     } else if (Controller1.ButtonY.pressing()) {
       Clamp.spin(vex::directionType::rev, clampPCT, vex::velocityUnits::pct);
+    } else if (Clamp.rotation(rotationUnits::deg) <= 10) {
+      Clamp.stop(vex::brakeType::coast);
     } else {
       Clamp.stop(vex::brakeType::hold);
     }
@@ -129,6 +132,8 @@ void usercontrol(void) {
     } else if (Controller1.ButtonL2.pressing()) {
       TrayRotate.spin(vex::directionType::rev, rotateSpeedPCT,
                       vex::velocityUnits::pct);
+    } else if (TrayRotate.rotation(rotationUnits::deg) <= 20) {
+      TrayRotate.stop(vex::brakeType::coast);
     } else {
       TrayRotate.stop(vex::brakeType::hold);
     }
@@ -148,7 +153,7 @@ int main() {
   // Run the pre-autonomous function.
   pre_auton();
   Brain.Screen.drawCircle(1, 1, 10);
-  Brain.Screen.setFont(monoL); 
+  Brain.Screen.setFont(monoL);
   Brain.Screen.setCursor(1, 1);
   Brain.Screen.print("2 + 2 is 4");
   Brain.Screen.setCursor(2, 1);
