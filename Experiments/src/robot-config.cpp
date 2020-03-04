@@ -5,8 +5,10 @@ using signature = vision::signature;
 using code = vision::code;
 
 // A global instance of brain used for printing to the V5 Brain screen
+brain  Brain;
 
 // VEXcode device constructors
+motor Motor11 = motor(PORT11, ratio18_1, false);
 
 // VEXcode generated functions
 

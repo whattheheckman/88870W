@@ -1,6 +1,9 @@
 using namespace vex;
 
+extern brain Brain;
 
+// VEXcode devices
+extern motor Motor11;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Text.

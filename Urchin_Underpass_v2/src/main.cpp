@@ -10,16 +10,25 @@
 #include "vex.h"
 using namespace vex;
 
-brain Brain;
-competition Competition;
-motor LeftDrive(PORT11, gearSetting::ratio18_1, false);
-motor RightDrive(PORT20, gearSetting::ratio18_1, true);
-motor IntakeRotate(PORT14, gearSetting::ratio18_1, false);
-motor LeftArm(PORT16, gearSetting::ratio18_1, false);
-motor RightArm(PORT17, gearSetting::ratio18_1, true);
-motor LeftScissor(PORT15, gearSetting::ratio36_1, false);
-motor RightScissor(PORT13, gearSetting::ratio36_1, true);
-controller Controller1(controllerType::primary);
+vex::brain Brain;
+vex::competition Competition;
+vex::motor LeftDrive(vex::PORT11, vex::gearSetting::ratio18_1, false);
+vex::motor RightDrive(vex::PORT20, vex::gearSetting::ratio18_1, true);
+vex::motor TrayRotate(vex::PORT14, vex::gearSetting::ratio18_1, false);
+vex::motor LeftArm(vex::PORT16, vex::gearSetting::ratio18_1, false);
+vex::motor RightArm(vex::PORT17, vex::gearSetting::ratio18_1, true);
+vex::motor LeftScissor(vex::PORT15, vex::gearSetting::ratio36_1, false);
+vex::motor RightScissor(vex::PORT13, vex::gearSetting::ratio36_1, true);
+vex::motor Clamp(vex::PORT12, vex::gearSetting::ratio18_1, false);
+vex::controller Controller1(vex::controllerType::primary);
+vex::drivetrain Drivetrain = drivetrain(LeftDrive, RightDrive, 319.19, 367.5063, 254, mm, 1);
+
+
+void drivetrainBrake(){
+  LeftDrive.stop(vex::brakeType::brake);
+  RightDrive.stop(vex::brakeType::brake);
+}
+
 
 int liftSpeedPCT = 75;
 int clawSpeedPCT = 50;
@@ -31,11 +40,6 @@ int rampDelayTime = 5;
 float joyspeedMod = 0.9;
 float slowmodeMod = 0.4;
 bool slowmode = false;
-
-void drivetrainBrake() {
-  LeftDrive.stop(vex::brakeType::brake);
-  RightDrive.stop(vex::brakeType::brake);
-}
 
 void slowmodeOn() {
   slowmode = true;
